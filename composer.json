@@ -1,0 +1,8 @@
+{
+    "name": "nguyenbo/shopping-cart",
+    "description": "A light weight shopping cart package for Laravel",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "stable",
+    "require": {}
+}
