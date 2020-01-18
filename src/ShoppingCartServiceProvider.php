@@ -17,11 +17,11 @@ class ShoppingCartServiceProvider extends ServiceProvider
     public function register()
     {
         if ($this->getStorageService() == 'session') {
-            $this->app->singleton('shoppingcart', function($app) {
+            $this->app->singleton('shoppingcart', function ($app) {
                 return new Session($app['session'], $app['events']);
             });
         } else {
-            $this->app->singleton('shoppingcart', function($app) {
+            $this->app->singleton('shoppingcart', function ($app) {
                 return new Database();
             });
         }
@@ -35,7 +35,7 @@ class ShoppingCartServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/config/shoppingcart.php' => config_path('shoppingcart.php'),
+            __DIR__ . '/config/shoppingcart.php' => config_path('shoppingcart.php'),
         ], 'config');
     }
 
@@ -48,17 +48,16 @@ class ShoppingCartServiceProvider extends ServiceProvider
     {
         $class = $this->app['config']->get('shoppingcart.storage', 'session');
 
-        switch ($class)
-        {
+        switch ($class) {
             case 'session':
                 return 'session';
-            break;
+                break;
             case 'database':
                 return 'database';
-            break;
+                break;
             default:
                 return 'session';
-            break;
+                break;
         }
     }
 }

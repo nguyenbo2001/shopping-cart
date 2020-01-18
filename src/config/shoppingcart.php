@@ -1,4 +1,4 @@
 <?php
 return array(
-  'storage' => 'session', // session or database
+    'storage' => 'session', // session or database
 );

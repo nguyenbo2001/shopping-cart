@@ -1,4 +1,5 @@
 <?php
+
 namespace NguyenBo\ShoppingCart\Facades;
 
 use Illuminate\Support\Facades\Facade;
@@ -10,11 +11,11 @@ use Illuminate\Support\Facades\Facade;
  */
 class ShoppingCartFacade extends Facade
 {
-  /**
-   * @return string
-   */
-  protected static function getFacadeAccessor()
-  {
-    return 'shoppingcart';
-  }
+    /**
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'shoppingcart';
+    }
 }
