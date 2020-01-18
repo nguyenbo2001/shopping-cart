@@ -35,7 +35,7 @@ class Session
 
     public function name($name)
     {
-        $this->name = $name;
+        $this->name = 'cart.' . $name;
 
         return $this;
     }
@@ -92,7 +92,7 @@ class Session
      */
     public function get($rawId)
     {
-        $row = $this->getCart()->contains($rawId);
+        $row = $this->getCart()->get($rawId);
 
         return is_null($row) ? null : new Item($row);
     }
@@ -146,17 +146,17 @@ class Session
     protected function addRow($id, $name, $qty, $price, array $attributes = [])
     {
         if (!is_numeric($qty) || $qty < 1) {
-            throw new \Exception('Invalid quantity');
+            throw new \Exception('Invalid quantity.');
         }
 
         if (!is_numeric($price) || $price < 0) {
-            throw new \Exception('Invalid price');
+            throw new \Exception('Invalid price.');
         }
 
         $cart = $this->getCart();
         $rawId = $this->generateRawId($id, $attributes);
 
-        if ($row = $cart->contains($rawId)) {
+        if ($row = $cart->get($rawId)) {
             $row = $this->updateQty($rawId, $row->qty + $qty);
         } else {
             $row = $this->insertRow($rawId, $id, $name, $qty, $price, $attributes);
@@ -214,13 +214,13 @@ class Session
     protected function updateRow($rawId, array $attributes)
     {
         $cart = $this->getCart();
-        $row = $cart->contains($rawId);
+        $row = $cart->get($rawId);
         foreach ($attributes as $key => $value) {
-            $row->push($key, $value);
+            $row->put($key, $value);
         }
 
         if (count(array_intersect(array_keys($attributes), ['qty', 'price']))) {
-            $row->push('total', $row->qty * $row->price);
+            $row->put('total', $row->qty * $row->price);
         }
 
         $cart->push($rawId, $row);
@@ -244,7 +244,7 @@ class Session
         $newRow = $this->makeRow($rawId, $id, $name, $qty, $price, $attributes);
 
         $cart = $this->getCart();
-        $cart->push($rawId, $newRow);
+        $cart->put($rawId, $newRow);
         $this->save($cart);
 
         return $newRow;
@@ -285,7 +285,7 @@ class Session
     public function update($rawId, $attribute)
     {
         if (!$row = $this->get($rawId)) {
-            throw new \Exception('Item not found');
+            throw new \Exception('Item not found.');
         }
 
         $cart = $this->getCart();
@@ -338,6 +338,8 @@ class Session
         $this->event->push('cart.destroying', $cart);
         $this->save(null);
         $this->event->push('cart.destroyed', $cart);
+
+        return true;
     }
 
     /**
